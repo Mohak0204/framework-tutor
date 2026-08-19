@@ -36,9 +36,16 @@ $env:DB_PORT = "5432"
 $env:DB_NAME = "framework_tutor"
 $env:DB_USERNAME = "framework_tutor"
 $env:DB_PASSWORD = "YOUR_LOCAL_PASSWORD" # Must match POSTGRES_PASSWORD in .env
+$env:JWT_SECRET = "REPLACE_WITH_A_BASE64_ENCODED_32_BYTE_SECRET"
 
 cd backend
 mvn spring-boot:run
+```
+
+Generate a suitable local JWT secret with:
+
+```powershell
+[Convert]::ToBase64String([System.Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
 ```
 
 At startup, Flyway applies the database migrations, including the initial `users` table for authentication.

@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 import com.frameworktutor.backend.auth.exception.EmailAlreadyRegisteredException;
+import com.frameworktutor.backend.auth.exception.InvalidCredentialsException;
 import com.frameworktutor.backend.common.api.ApiErrorResponse;
 import com.frameworktutor.backend.common.api.ApiFieldError;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,13 @@ public class GlobalExceptionHandler {
             EmailAlreadyRegisteredException exception,
             HttpServletRequest request) {
         return error(HttpStatus.CONFLICT, exception.getMessage(), request, List.of());
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidCredentials(
+            InvalidCredentialsException exception,
+            HttpServletRequest request) {
+        return error(HttpStatus.UNAUTHORIZED, exception.getMessage(), request, List.of());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
