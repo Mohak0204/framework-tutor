@@ -8,22 +8,22 @@ Install Java 21, Maven 3.9+, Node.js 20+ (includes npm), and Docker Desktop.
 
 ## 1. Start PostgreSQL
 
-Choose a local-only password and replace `YOUR_LOCAL_PASSWORD` below before running the command:
+Copy the local environment template, then choose a local-only password in `.env`:
 
 ```powershell
-docker run --name framework-tutor-postgres --env POSTGRES_DB=framework_tutor --env POSTGRES_USER=framework_tutor --env POSTGRES_PASSWORD=YOUR_LOCAL_PASSWORD --publish 5432:5432 --detach postgres:16
+Copy-Item .env.example .env
 ```
 
-Run this once. On later days, start the existing database with:
+Start PostgreSQL (the database is named `framework_tutor` and is available on port `5432`):
 
 ```powershell
-docker start framework-tutor-postgres
+docker compose up -d
 ```
 
 Confirm PostgreSQL is ready:
 
 ```powershell
-docker exec framework-tutor-postgres pg_isready -U framework_tutor -d framework_tutor
+docker compose exec postgres pg_isready -U framework_tutor -d framework_tutor
 ```
 
 ## 2. Run the backend
@@ -35,19 +35,22 @@ $env:DB_HOST = "localhost"
 $env:DB_PORT = "5432"
 $env:DB_NAME = "framework_tutor"
 $env:DB_USERNAME = "framework_tutor"
-$env:DB_PASSWORD = "YOUR_LOCAL_PASSWORD"
+$env:DB_PASSWORD = "YOUR_LOCAL_PASSWORD" # Must match POSTGRES_PASSWORD in .env
 
 cd backend
 mvn spring-boot:run
 ```
 
+At startup, Flyway applies the database migrations, including the initial `users` table for authentication.
+
 Verify it is running in a second terminal:
 
 ```powershell
 Invoke-RestMethod http://localhost:8080/api/health
+Invoke-RestMethod http://localhost:8080/api/health/database
 ```
 
-Expected result: `status : ok`.
+The database check should return `status : ok` and `database : connected`.
 
 ## 3. Run the frontend
 
