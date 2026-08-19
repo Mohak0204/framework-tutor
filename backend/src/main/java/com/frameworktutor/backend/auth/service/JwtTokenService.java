@@ -9,6 +9,7 @@ import javax.crypto.SecretKey;
 
 import com.frameworktutor.backend.auth.config.JwtProperties;
 import com.frameworktutor.backend.user.domain.User;
+import com.frameworktutor.backend.user.domain.UserRole;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.io.Decoders;
