@@ -3,6 +3,7 @@ package com.frameworktutor.backend.common.exception;
 import java.time.Instant;
 import java.util.List;
 
+import com.frameworktutor.backend.auth.exception.EmailAlreadyRegisteredException;
 import com.frameworktutor.backend.common.api.ApiErrorResponse;
 import com.frameworktutor.backend.common.api.ApiFieldError;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(EmailAlreadyRegisteredException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateEmail(
+            EmailAlreadyRegisteredException exception,
+            HttpServletRequest request) {
+        return error(HttpStatus.CONFLICT, exception.getMessage(), request, List.of());
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidation(
